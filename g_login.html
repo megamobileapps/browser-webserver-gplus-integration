@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap 101 Template</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+   <script>
+       function g_callback(authResult) {
+           //console.log("authresult is:"+JSON.stringify(authResult));
+	       if (authResult['code']) {
+
+                // Hide the sign-in button now that the user is authorized, for example:
+                $('#signinButton').attr('style', 'display: none');
+
+
+                // Send the code to the server
+                var p = $.post( 
+                    'g_login_processing.php?storeToken&localhost=1', 
+                    { 
+                        code:authResult['code'],
+                        gplusid:"-1"
+                    } 
+                );
+                p.done(function(data){
+                    if( data && data.result === "success") {
+                        if (result['profile'] && result['people']){
+                          $('#results').html('Hello ' + result['profile']['displayName'] 
+                                             + '. You successfully made a server side call to people.get and people.list');
+                        } else {
+                          $('#results').html('Failed to make a server-side call. Check your configuration and console.');
+                        }
+                    } else {
+                        console.log('There was an error: ' );
+                    }
+                });
+
+                p.fail(function (authResult) {
+                    console.log('There was an error: ' + authResult['error']);
+                });
+
+            }
+       }
+    </script>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+    <div id="signinButton">
+      <span class="g-signin"
+        data-scope="https://www.googleapis.com/auth/plus.login"
+        data-clientid="client id"
+        data-redirecturi="postmessage"
+        data-accesstype="offline"
+        data-cookiepolicy="single_host_origin"
+        data-callback="g_callback">
+      </span>
+    </div>
+<div id="result"></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  </body>
+</html>
